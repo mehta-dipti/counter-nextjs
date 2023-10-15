@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 
 const useCounter = (changeBy: number) => {
-  const [value, setValue] = useState<number | any>(0);
+  const [value, setValue] = useState<number | any>(() => {
+    const initialValue: string | null = window.localStorage.getItem("counter");
+    return initialValue ? JSON.parse(initialValue) : 1;
+  });
 
   const increment = () => {
-    setValue(value + changeBy);
+    let newValue = value + changeBy;
+    setValue(newValue);
+    window.localStorage.setItem("counter", JSON.stringify(newValue));
   };
 
   const decrement = () => {
-    setValue(value - changeBy);
+    let newValue = value - changeBy;
+    window.localStorage.setItem("counter", JSON.stringify(newValue));
+    setValue(newValue);
   };
 
   return [value, increment, decrement];
